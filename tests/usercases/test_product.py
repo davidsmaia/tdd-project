@@ -34,7 +34,7 @@ async def test_usecases_query_should_return_sucess():
     assert len(result) > 1
 
 async def test_usecases_update_should_return_sucess(product_up, product_inserted):
-    product_up.price = 7.500
+    product_up.price = "7.500"
     result = await product_usecase.update(id=product_inserted.id, body=product_up)
 
 
