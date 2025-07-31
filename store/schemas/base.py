@@ -1,4 +1,5 @@
 from datetime import datetime
+from decimal import Decimal
 from bson import Decimal128
 from pydantic import UUID4, BaseModel, Field, model_validator
 
@@ -6,7 +7,7 @@ class BaseSchemaMixin(BaseModel):
     class Config:
         from_attributes = True
 
-class OutMixin(BaseModel):
+class OutSchema(BaseModel):
     id: UUID4 = Field()
     created_at: datetime = Field()
     updated_at: datetime = Field()
@@ -15,6 +16,6 @@ class OutMixin(BaseModel):
     def set_schema(cls, data):
         for key, value in data.items():
             if isinstance(value, Decimal128):
-                data[key] = Decimal128(str(value))
+                data[key] = Decimal(str(value))
         
         return data

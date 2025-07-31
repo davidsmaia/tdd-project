@@ -1,12 +1,11 @@
-from datetime import datetime
 from decimal import Decimal
 from typing import Annotated, Optional
 from bson import Decimal128
-from pydantic import UUID4, AfterValidator, Field, model_validator
-from store.schemas.base import BaseSchemaMixin, BaseModel, OutMixin
+from pydantic import AfterValidator, Field
+from store.schemas.base import BaseSchemaMixin, OutSchema
 
 
-class ProductBase(BaseModel):
+class ProductBase(BaseSchemaMixin):
     # No pydantic, os tres pontos (...) dizem q o valor é obrigatório - ou seja, que deve ser passado
     name: str = Field(...,description="Product name") 
     quantity: int = Field(...,description="Product quantity")
@@ -15,9 +14,9 @@ class ProductBase(BaseModel):
 
 
 class ProductIn(ProductBase, BaseSchemaMixin):
-    ...
+    pass
 
-class ProductOut(ProductIn, OutMixin):
+class ProductOut(ProductIn, OutSchema):
     pass
     
 
@@ -26,14 +25,14 @@ def convert_decimal_128(v):
 
 Decimal_ = Annotated[Decimal, AfterValidator(convert_decimal_128)]
 
-class ProductUpdate(ProductBase):
+class ProductUpdate(BaseSchemaMixin):
     quantity: Optional[int] = Field(None, description="Product quantity")
     price: Optional[Decimal_] = Field(None, description="Product price")
     status: Optional[bool] = Field(None, description="Product status")
 
 
 
-class ProductUpdateOut(ProductUpdate, OutMixin):
+class ProductUpdateOut(ProductOut):
     pass
 
 
